@@ -1,0 +1,155 @@
+\documentclass[12pt]{article}
+
+\usepackage{setspace}
+
+\usepackage{amsmath, graphicx, color, fancyhdr, tikz-cd, mdframed, enumitem, framed, adjustbox, bbm, upgreek, xcolor, hyperref}
+\usepackage[framed,thmmarks]{ntheorem}
+\usepackage[style=alphabetic]{biblatex}
+%Set the bibliography file
+\bibliography{sources}
+
+\usepackage[T1]{fontenc}
+\usepackage[urw-garamond]{mathdesign}
+\usepackage{garamondx}
+
+%Replacement for the old geometry package
+\usepackage{fullpage}
+
+%Input my definitions
+\input{./mydefs.tex}
+
+%Shade definitions
+\theoremindent0cm
+\theoremheaderfont{\normalfont\bfseries} 
+\def\theoremframecommand{\colorbox[rgb]{0.9,1,.8}}
+\newshadedtheorem{defn}[thm]{Definition}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%% Customize Below %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%header stuff
+\setlength{\headsep}{24pt}  % space between header and text
+\pagestyle{fancy}     % set pagestyle for document
+\lhead{Notes on the Schur-Weil Functor} % put text in header (left side)
+\rhead{Nico Courts} % put text in header (right side)
+\cfoot{\itshape p. \thepage}
+\setlength{\headheight}{15pt}
+%\allowdisplaybreaks
+
+% Document-Specific Macros
+\DeclareMathOperator{\1}{\mathbbm{1}}
+
+\begin{document}
+%make the title page
+\title{Notes on the Grassmannian \vspace{-1ex}}
+\author{Nico Courts}
+\date{Summer 2019}
+\maketitle
+
+\begin{abstract}
+	These notes are my summary of the development of the Schur-Weil functor from representations of the Schur algebra $S(n,d)$ to 
+	representations of $\frakS_d$. After developing the theory that arose beginning in Schur's 1901 thesis, we will establish that this 
+	functor is exact and behaves nicely with respect to simple modules, as well as being a monoidal functor (under the correct monoidal structure).
+\end{abstract}
+
+\section{Background and Introduction}
+The primary reference for this paper is J.A. Green's \textit{Polynomial Representations of $GL_n$} \cite{green}. Other sources will be used as well, 
+and will be introduced as needed.
+
+The basic idea for this theory begins with Schur's thesis in 1901 \cite{schur-thesis}. Here he developed the theory underlying
+the representation theory of the general linear group $GL_n$. As a tool, he recognized that the irreducible representations of 
+$GL_n$ took on a particular form that made them amenable to admitting actions by symmetric groups. Then Schur could rely on 
+Frobenius' development of the representation theory for $\frakS_d$ to say something about $GL_n$.
+
+\subsection{Notation}
+We always use $\frakS_d$ to denote the symmetric group on $d$ letters, and let $k$ be an infinite field (unless otherwise noted).
+
+\subsection{Representations of Semigroups}
+Recall that a \textbf{semigroup} is a group where we relax the inverse requirement. If we are interested in studying the representation 
+theory of a semigroup $\Gamma$, there are some natural modules to consider:
+\begin{ex}
+	$k\Gamma=\bigoplus_{g\in \Gamma}kg$, the \textbf{semigroup algebra} for $\Gamma$ over $k$. Notice that if $\Gamma$ is infinite, we only take 
+	the elements that are supported at finitely many $g$ (that is, only finitely many coefficients are nonzero).
+\end{ex}
+\begin{ex} $k^\Gamma$, the set of all maps $\Gamma\to k$, which is naturally a commutative $k$-algebra. It inherits a $k\Gamma$-bimodule structure 
+	by considering the left- and right-translation maps $L_g:k^\Gamma\to k$ and $R_g:k^\Gamma\to k$ defined for all $g\in\Gamma$ by 
+	\[L_g(f)(h)= f(gh)\qquad R_g(f)(h)=f(hg)\]
+	Due to the fact that $L_g$ defines the \textit{right} action and $R_g$ the left, we write for simplicity:
+	\[g\circ f=R_g(f)\quad\text{and}\quad f\circ g=L_g(f).\]
+\end{ex}
+
+It is in the context of the $k\Gamma$ module $k^\Gamma$ that we get our first definition:
+\begin{defn}\label{defn-finitary}
+	Let $k^\Gamma$ be as above. Then an element $f:\Gamma\to k$ is called a \textbf{finitary element} or \textbf{representative function}
+	if $f$ satisfies one of the following equivalent conditions:
+	\begin{itemize}
+		\item $k^\Gamma f$ is finite dimensional over $k$.
+		\item $f k^\Gamma$ is finite dimensional over $k$.
+		\item $\Delta f\in k^\Gamma\otimes k^\Gamma$ -- in other words, the comultiplication $\Delta f$ is finitely supported.
+	\end{itemize}
+\end{defn}
+\begin{rmk}
+	The collection of all finitary elements of $k^\Gamma$ will be written $F=F(k^\Gamma)$ and is a $k$-bialgebra -- in particular,
+	a sub-bialgebra of $k^\Gamma$.
+\end{rmk}
+\begin{rmk}
+	The reason such elements are called representative functions is that if we fix a finite dimensional $V$ over $k$ 
+	and a basis $\calB$ for $V$, we can write down the structure maps of a particular $\Gamma$ action by noticing 
+	\[g\cdot \alpha=\sum_{\beta\in\calB}r_{\alpha\beta}(g)\beta\]
+	where $r_{\alpha\beta}:\Gamma\to k$ are called the \textbf{coefficient functions} of the representation.
+
+	Then the $k$-span $\operatorname{cf}(V)=\sum_{\alpha,\beta}k\cdot r_{\alpha\beta}$ of coefficient functions for a particular (finite-dimensional) representation 
+	$V$ ends up being a subcoalgebra of $k^\Gamma$ and in fact every finitary function lies in $\operatorname{cf}(V)$ for some 
+	finite-dimensional $V$. Here we can just take $V=k^\Gamma f$ which is finite dimensional by defn~\ref{defn-finitary}.
+\end{rmk}
+
+An important idea that comes from this that one can define an \textbf{algebraic representation theory} of $\Gamma$ over $k$. Take any subcoalgebra $A$ of $F=F(k^\Gamma)$
+and define the $A$\textbf{-representation theory} of $\Gamma$ to be the full subcategory $\mathbf{mod}_A(k\Gamma)$ of $\rmod (k\Gamma)$ to be the one whose 
+objects are the (finite-dimensional) $k\Gamma$ modules $V$ such that $\text{cf}(V)\subseteq A$.
+
+A nice result is that the (left) $A$-rational $k\Gamma$-modules are equivalent to the category $\mathbf{com}(A)$ of finite (right) $A$-comodules.
+\begin{prop}
+	$\mathbf{mod}_A(k\Gamma)\simeq \mathbf{com}(A)$
+\end{prop}
+\begin{prf}
+	\textit{Sketch:} Take an $A$-rational $k\Gamma$ module $V$ with action $\tau:\Gamma\to V$. Fix a basis $\{v_i\}_1^n$
+	and as before extract the structure maps $r_{\alpha\beta}$:
+	\[\tau(v_\alpha)=\sum_\beta r_{\alpha\beta} v_\beta.\]
+	
+	Then define the comodule $(V,\gamma)$ with coaction $\gamma$ via 
+	\[\gamma(v_\alpha)=\sum_\beta v_\beta\otimes r_{\alpha\beta}.\]
+	One can check this defines a comodule structure on $V$. 
+
+	The process reverses very easily, where one extracts the $r_{\alpha\beta}$ from the coaction.
+	By construction we will have that $r_{\alpha\beta}\in A$, so we get the $A$-rationality for free.
+
+	Some mopping up shows that these are equivalences of categories, which is pretty believable. 
+\end{prf}	
+\begin{rmk}
+	One of the most immediate consequences of this realization (it is barely a proof) is that we can define a left $A^\ast=\Hom_k(A,k)$-module (note that $A^\ast$ is a $k$-algebra with the convolution product)
+	structure on any right $A$-comodule. We do this by writing for any $f\in A^\ast$
+	\[f\cdot v=(\1_V\otimes f)(\gamma(v))\]
+	or in coordinates 
+	\[f\cdot v_\alpha=\sum_\beta f(r_{\alpha\beta})v_\beta\]
+\end{rmk}
+
+\section{\texorpdfstring{$GL_n$}{GLn} and the Schur Algebra}
+From now on, we specialize the theory in the section above to the case when $\Gamma=GL_n$ (we can think of this as the group scheme). 
+Then we can set $A_k$ to be the $k$-algebra generated by the function $c_{ij}$ which extracts the $(i,j)^{th}$ entry.
+This gives us precisely the polynomial representations of $\Gamma$ and restricting to the homogenous polynomials in $A$ of degree $d$
+gives us $A(n,d)$.
+
+\begin{defn}
+	The \textbf{Schur algebra} $S(n,d)$ is the dual of $A=A(n,d):$
+	\[S(n,d)=A^\ast=\Hom_k(A(n,d),k).\]
+\end{defn}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%  Bibliography %%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\medskip
+
+\printbibliography
+
+\end{document}
