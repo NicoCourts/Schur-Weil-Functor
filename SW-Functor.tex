@@ -48,7 +48,7 @@
 \maketitle
 
 \begin{abstract}
-	These notes are my summary of the development of the Schur-Weil functor from representations of the Schur algebra $S(n,d)$ to 
+	These notes are my summary of the development of the Schur-Weyl functor from representations of the Schur algebra $S(n,d)$ to 
 	representations of $\frakS_d$. After developing the theory that arose beginning in Schur's 1901 thesis, we will establish that this 
 	functor is exact and behaves nicely with respect to simple modules, as well as being a monoidal functor (under the correct monoidal structure).
 \end{abstract}
@@ -238,10 +238,53 @@ are not dependent on the choice of $\bbZ$-form.
 
 \subsection{The Trick}
 To do some magic we notice that there is a duality at play between the $A_k(n,r)$-regular representations of $GL_n$ and the representations of $\frakS_r$, 
-and to see this we consider the natural action of these groups on $E^\otimes r$, where $E\cong k^n$. The left action by $\Gamma$ is just the diagonal action 
+and to see this we consider the natural action of these groups on $E^{\otimes r}$, where $E\cong k^n$. The left action by $\Gamma$ is just the diagonal action 
 on each $k^n$ and $\frakS_r$ acts on $E^{\otimes r}$ on the right by permuting the tensor factors. The critical thing to notice here is that these two 
 actions commute with one another:
 \[(g\cdot v)\cdot\sigma=g\cdot(v\cdot\sigma),\ \forall g\in\Gamma, \sigma\in\frakS_r.\]
+
+Then we get some results from Schur's 1927 paper \textit{\"Uber the rationalen Darstellungen der allgemeinen linearen Gruppe}, a reference to which I am yet to cook up.
+\begin{thm}[Schur]
+	Let $\varphi:S_k(n,r)\to \End_k(E^{\otimes r})$ be the representation afforded by the above action of $S_k(n,r)$. Then 
+	\begin{itemize}
+		\item $\Im \varphi=\End_{k\frakS_r}(E^{\otimes r})$; and 
+		\item $\ker\varphi=0$.
+	\end{itemize}
+	So $S_k(n,r)\cong \End_{k\frakS_r}(E^{\otimes r})$.
+\end{thm}
+The idea here is to take our $\xi_{ab}$ basis for $S_k(n,r)$ and determine where the images go. Not too hard, I think.
+\begin{cor}[Schur]
+	If $\ch k=0$ or $\ch k>r$, then $S_k(n,r)$ is semisimple. That is every element of $M_k(n,r)$ is completely reducible.
+\end{cor}
+To see this, we just use the fact that $k\frakS_r$ is semisimple as in usual representation theory. Thus $E^{\otimes r}$ is 
+completely reducible, but the endomorphism ring of a completely reducible module is semisimple, so by the above theorem, $S_k(n,r)$ is semisimple.
+
+\subsection{Back to \texorpdfstring{$\bbZ$}{Z}-forms}
+In fact, $E^{\otimes r}$ is a $GL_n$-module (this time regarded as an affine group scheme over $\bbZ$). Let $\{V_k\}$ be a collection 
+of $k$-modules for each $k$ in some family of infinite fields. Then we say $\{V_k\}$ is \textbf{defined over $\bbZ$} if there is a $\bbZ$-form $V_\bbZ$
+and a family of isomorphisms $\delta_k:V_\bbZ\otimes k\to V_k$.
+
+In particular, the family of modules $E^{\otimes r}_k$ is defined over $\bbZ$.
+
+\subsection{Contravariant Duality}
+In group theory a usual way to define a dual representation for a $k\Gamma$-module $V$ is to take the linear 
+dual $V^\ast=\Hom_k(V,k)$ and define a left action of $\Gamma$ by 
+\[g\cdot f(v)=f(g^{-1}v)\]
+which give you another (left) $k\Gamma$-module. The problem with this process in our case is that the resulting 
+module may have structure maps $r_{ab}$ that no longer lie in $A_k(n,r)$. To account for this, we instead define the 
+\textbf{contravariant dual} $V^\circ$, defined using the transpose:
+\[g\cdot f=f(g^{\text{tr}}v).\]
+
+It is clear that the map $J:S_k(n,r)\to S_k(n,r)$ sending $\xi_{ab}$ to $\xi_{ba}$ is an involutory antihomomorphism.
+Notice 
+\[J(\xi)(c_{ab})=\xi(c_{ba})\]
+and so by taking $\xi=e_g$, we get 
+\[J(e_g)(c_{ab})=e_g(c_{ba})=c_{ba}(g)=c_{ab}(g^{\text{tr}})\]
+so $J(e_g)=e_{g^{\text{tr}}}$.
+
+So given an $A_k(n,r)$-rational $k\Gamma$ representation $V$, the corresponding $S_k(n,r)$ action on $V^\circ$ is given by 
+\[\xi\cdot f (v)=f(J(\xi)v). \]
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%  Bibliography %%%%%%%%%%%%%
